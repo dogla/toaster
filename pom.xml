@@ -5,8 +5,8 @@
   <version>0.0.1-SNAPSHOT</version>
   
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4jVersion>1.7.30</slf4jVersion>
         <licensePluginVersion>3.0</licensePluginVersion>
@@ -108,15 +108,15 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4jVersion}</version>
         </dependency>
-		<dependency>
-		    <groupId>org.eclipse.platform</groupId>
-		    <artifactId>org.eclipse.jface</artifactId>
-		    <version>3.21.0</version>
-		</dependency>
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.jface</artifactId>
+            <version>3.23.0</version>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.platform</groupId>
             <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
-            <version>3.115.0</version>
+            <version>3.117.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.eclipse.platform</groupId>
