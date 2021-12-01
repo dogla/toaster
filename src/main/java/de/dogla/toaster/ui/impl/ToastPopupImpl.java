@@ -443,6 +443,15 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 		addDisposeListener(e -> callback.onClosed());
 	}
 	
+	@Override
+	public void close() {
+		if (Display.getCurrent() == null) {
+			getDisplay().syncExec(super::close);
+		} else {
+			super.close();
+		}
+	}
+	
 	/**
 	 * @return <code>true</code> if the popup should be sticky
 	 */

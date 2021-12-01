@@ -50,13 +50,17 @@ import de.dogla.toaster.ui.ToastToolkit;
 		return INSTANCE;
 	}
 	
-	protected void toast(ToastToolkit toolkit, Toast toast) {
+	protected ToastPopup toast(ToastToolkit toolkit, Toast toast) {
 		// get popup area in current display thread
 		Rectangle monitorClientArea = toolkit.getPopupArea();
+		final ToastPopup[] result = new ToastPopup[1];
 		toolkit.getPopupDisplay().syncExec(() -> {
 			// create UI in popup display thread and try to show it
-			toast(toolkit.createPopup(toast, monitorClientArea), false);
+			ToastPopup popup = toolkit.createPopup(toast, monitorClientArea);
+			result[0] = popup;
+			toast(popup, false);
 		});
+		return result[0];
 	}
 	
 	protected void toast(ToastPopup toastPopup, boolean isPendingToast) {

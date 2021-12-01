@@ -72,4 +72,9 @@ public interface ToastPopup {
 	 */
 	public Rectangle getPopupArea();
 	
+	/**
+	 * Closes the popup programmatically.
+	 */
+	public void close();
+	
 }

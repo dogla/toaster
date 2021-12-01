@@ -18,6 +18,7 @@ package de.dogla.toaster;
 import java.util.List;
 import java.util.UUID;
 
+import de.dogla.toaster.ui.ToastPopup;
 import de.dogla.toaster.ui.ToastToolkit;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -114,9 +115,11 @@ public class Toast {
 	 * Shows the toast with the default toolkit.
 	 * 
 	 * @see Toaster#toast(Toast)
+	 * 
+	 * @return the corresponding toast popup
 	 */
-	public void toast() {
-		Toaster.toast(this);
+	public ToastPopup toast() {
+		return Toaster.toast(this);
 	}
 	
 	/**

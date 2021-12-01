@@ -15,6 +15,7 @@
  */
 package de.dogla.toaster;
 
+import de.dogla.toaster.ui.ToastPopup;
 import de.dogla.toaster.ui.ToastToolkit;
 import de.dogla.toaster.ui.impl.ToastToolkitImpl;
 
@@ -43,27 +44,31 @@ public class Toaster {
 	 * If no default toolkit was specified {@link IllegalStateException} will be thrown.
 	 * 
 	 * @param toast the toast
+	 * 
+	 * @return the corresponding toast popup
 	 */
-	public static synchronized void toast(Toast toast) {
+	public static synchronized ToastPopup toast(Toast toast) {
 		if (DEFAULT_TOOLKIT == null) {
 			DEFAULT_TOOLKIT = new ToastToolkitImpl();
 		}
-		toast(DEFAULT_TOOLKIT, toast);
+		return toast(DEFAULT_TOOLKIT, toast);
 	}
 	
 	/**
 	 * Shows the toast with the given toolkit.
 	 * @param toolkit the toolkit
 	 * @param toast the toast
+	 * 
+	 * @return the corresponding toast popup
 	 */
-	public static synchronized void toast(ToastToolkit toolkit, Toast toast) {
+	public static synchronized ToastPopup toast(ToastToolkit toolkit, Toast toast) {
 		if (toolkit == null) {
 			throw new IllegalStateException("Toast toolkit was null."); //$NON-NLS-1$
 		}
 		if (toast == null) {
 			throw new IllegalStateException("Toast was null."); //$NON-NLS-1$
 		}
-		ToastManager.getInstance().toast(toolkit, toast);
+		return ToastManager.getInstance().toast(toolkit, toast);
 	}
 	
 }
