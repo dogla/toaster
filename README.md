@@ -47,3 +47,67 @@ public class ToasterMain {
 The corresponding toast will look like this:
 
 ![sample](./docs/sample_basic.png)
+
+For simplicity, the sample uses an image as base64 encoded string.
+Besides base64 encoded strings, icons can also be
+- an instance of `org.eclipse.swt.graphics.Image`
+- an instance of `org.eclipse.jface.resource.ImageDescriptor`
+
+# Configuration
+
+The sample above shows only the default theme without any further configuration.
+
+You can customize the appearance with the following settings:
+
+| Settings | Description |
+| --- | --- |
+| position | the position of the toast: TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT |
+| minWidth, minHeight, maxWidth, maxHeight | with these settings you can customize the size of the displayed toast |
+| minIconWidth, minIconHeight, maxIconWidth, maxIconHeight | with these settings you can customize the size of the displayed icon |
+| allowIconUpscaling | flag indicating if the icon should be upscaled if it is smaller than the configured icon size |
+| backgroundColor | the color for the background of the toast |
+| iconBackgroundColor | the color for the background of the icon |
+| borderColor | the color for the border of the toast |
+| titleForegroundColor | the color for the foreground/font of the title |
+| messageForegroundColor | the color for the foreground/font of the message |
+| detailsForegroundColor | the color for the foreground/font of the details text |
+| actionsBackgroundColor | the color for the background of an action button |
+| actionsForegroundColor | the color for the foreground/font of an action button |
+| actionsBackgroundColorHovered | the color for the background of an action button when the mouse hovers over it |
+| actionsForegroundColorHovered | the color for the foreground/font of an action button when the mouse hovers over it  |
+| transparency | the transparency of the whole toast |
+| displayTime | the time how long the toast should be shown (if not sticky) |
+| fadeInTime | the time for the fade in animation |
+| fadeOutTime | the time for the fade out animation |
+| fadeInSteps | the animation steps used for the fade in animation |
+| fadeOutSteps | the animation steps used for the fade out animation |
+
+All settings are available inside the `ToastBuilder`, e.g. `Toast.builder().backgroundColor(color)`.
+
+Furthermore the actions have also some customizable settings.:
+| Settings | Description |
+| --- | --- |
+| backgroundColor | the color for the background of the action button (overrides `ToastBuilder.actionsBackgroundColor` |) |
+| foregroundColor | the color for the foreground/font of the action button (overrides `ToastBuilder.actionsForegroundColor` |) |
+| backgroundColorHovered | the color for the background of the action button when the mouse hovers over it (overrides `ToastBuilder.actionsBackgroundColorHovered` |) |
+| foregroundColorHovered | the color for the foreground/font of the action button when the mouse hovers over it (overrides `ToastBuilder.actionsForegroundColorHovered` |) |
+| transparency | the transparency of the whole toast |
+
+All settings are available inside the `ToastActionBuilder`, e.g. `ToastAction.builder().backgroundColor(color)`.
+
+# Samples
+
+![sample](./docs/sample_01.png)
+![sample](./docs/sample_02.png)
+![sample](./docs/sample_03.png)
+![sample](./docs/sample_04.png)
+![sample](./docs/sample_05.png)
+![sample](./docs/sample_06.png)
+![sample](./docs/sample_07.png)
+![sample](./docs/sample_08.png)
+![sample](./docs/sample_09.png)
+![sample](./docs/sample_10.png)
+![sample](./docs/sample_11.png)
+![sample](./docs/sample_12.png)
+![sample](./docs/sample_13.png)
+![sample](./docs/sample_14.png)
