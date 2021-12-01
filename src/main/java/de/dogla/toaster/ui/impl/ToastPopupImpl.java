@@ -318,7 +318,7 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 			gc.fillRectangle(0, 0, rect.width, rect.height);
 			gc.fillGradientRectangle(0, 0, rect.width, 40, true);
 			gc.setForeground(toSWTColor(toast.getBorderColor()));
-			gc.drawRectangle(0, 0, rect.width, rect.height);
+			gc.drawRectangle(0, 0, rect.width-1, rect.height-1);
 			gc.dispose();
 			setBackgroundImage(newImage);
 			if (oldImage != null) {
