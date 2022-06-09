@@ -42,7 +42,7 @@ import de.dogla.toaster.ui.ToastToolkit;
 	private static Logger logger = LoggerFactory.getLogger(ToastManager.class);
 	
 	private Map<ToastPosition, Set<Rectangle>> visibleToasts = new HashMap<>();
-	private Deque<ToastPopup> pendingToasts = new ArrayDeque<>(); 
+	private Deque<ToastRequest> pendingToasts = new ArrayDeque<>(); 
 	
 	private static ToastManager INSTANCE = new ToastManager();
 	
@@ -50,30 +50,27 @@ import de.dogla.toaster.ui.ToastToolkit;
 		return INSTANCE;
 	}
 	
-	protected ToastPopup toast(ToastToolkit toolkit, Toast toast) {
+	protected void toast(ToastToolkit toolkit, Toast toast) {
 		// get popup area in current display thread
 		Rectangle monitorClientArea = toolkit.getPopupArea();
-		final ToastPopup[] result = new ToastPopup[1];
 		toolkit.getPopupDisplay().syncExec(() -> {
-			// create UI in popup display thread and try to show it
-			ToastPopup popup = toolkit.createPopup(toast, monitorClientArea);
-			result[0] = popup;
-			toast(popup, false);
+			// create/show in popup display thread
+			toast(new ToastRequest(toolkit, toast, monitorClientArea), false);
 		});
-		return result[0];
 	}
 	
-	protected void toast(ToastPopup toastPopup, boolean isPendingToast) {
+	protected void toast(ToastRequest toastRequest, boolean isPendingToast) {
 		synchronized (visibleToasts) {
-			Toast toast = toastPopup.getToast();
+			Toast toast = toastRequest.getToast();
 			// previous toasts already pending > add the new toast directly to the queue
 			if (!isPendingToast && !pendingToasts.isEmpty()) {
 				logger.info("Other toasts already pending. Added toast to the queue: {}", toast);
-				pendingToasts.add(toastPopup);
+				pendingToasts.add(toastRequest);
 				return;
 			}
 			
 			// compute location for new UI 
+			ToastPopup toastPopup = toastRequest.getOrCreatePopup();
 			ToastPosition toastPosition = toast.getPosition();
 			Point position = computeLocation(toastPosition, toastPopup);
 			if (position != null) {
@@ -87,7 +84,7 @@ import de.dogla.toaster.ui.ToastToolkit;
 				// unregister pending toast
 				if (isPendingToast) {
 					logger.info("Unregistering pending toast: {}", toast);
-					pendingToasts.remove(toastPopup);
+					pendingToasts.remove(toastRequest);
 				}
 				
 				// show UI
@@ -102,17 +99,18 @@ import de.dogla.toaster.ui.ToastToolkit;
 							}
 							// check for pending toasts
 							if (!pendingToasts.isEmpty()) {
-								ToastPopup pendingToastPopup = pendingToasts.peek();
-								Toast pendingToast = pendingToastPopup.getToast();
+								ToastRequest pendingToastRequest = pendingToasts.peek();
+								Toast pendingToast = pendingToastRequest.getToast();
 								logger.info("Pending toasts detected. Picking toast: {}", pendingToast);
 								logger.info("{} more pending tasks.", pendingToasts.size());
 								
 								ToastPosition pendingToastPosition = pendingToast.getPosition();
+								ToastPopup pendingToastPopup = pendingToastRequest.getOrCreatePopup();
 								Point pendingPosition = computeLocation(pendingToastPosition, pendingToastPopup);
 								if (pendingPosition != null) {
 									// show pending toast
-									pendingToasts.remove(pendingToastPopup);
-									toast(pendingToastPopup, true);
+									pendingToasts.remove(pendingToastRequest);
+									toast(pendingToastRequest, true);
 								} else {
 									// no valid position found
 									logger.info("No free area found for Pending toast: {}", pendingToast);
@@ -124,11 +122,11 @@ import de.dogla.toaster.ui.ToastToolkit;
 			} else if (!isPendingToast) {
 				// no free area available -> queue until some toasts were closed
 				logger.info("No free area found for the toast. Added toast to the queue: {}", toast);
-				pendingToasts.add(toastPopup);
+				pendingToasts.add(toastRequest);
 			} else {
 				// no free area available for already pended toast > requeue at the start
 				logger.info("No free area found for already pending toast. Readded toast to the queue: {}", toast);
-				pendingToasts.addFirst(toastPopup);
+				pendingToasts.addFirst(toastRequest);
 			}
 		}
 	}
@@ -219,6 +217,27 @@ import de.dogla.toaster.ui.ToastToolkit;
 			}
 		}
 		return false;
+	}
+	
+	private static class ToastRequest {
+		private ToastToolkit toolkit;
+		private Toast toast;
+		private Rectangle monitorClientArea;
+		private ToastPopup popup;
+		private ToastRequest(ToastToolkit toolkit, Toast toast, Rectangle monitorClientArea) {
+			this.toolkit = toolkit;
+			this.toast = toast;
+			this.monitorClientArea = monitorClientArea;
+		}
+		ToastPopup getOrCreatePopup() {
+			if (popup == null) {
+				popup = toolkit.createPopup(toast, monitorClientArea);
+			}
+			return popup;
+		}
+		public Toast getToast() {
+			return toast;
+		}
 	}
 	
 }
