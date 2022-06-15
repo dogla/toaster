@@ -20,6 +20,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
@@ -217,6 +218,20 @@ import de.dogla.toaster.ui.ToastToolkit;
 			}
 		}
 		return false;
+	}
+	
+	protected boolean isEmpty() {
+		if (!pendingToasts.isEmpty()) {
+			return false;
+		}
+		Set<Entry<ToastPosition, Set<Rectangle>>> entrySet = visibleToasts.entrySet();
+		for (Entry<ToastPosition,Set<Rectangle>> entry : entrySet) {
+			Set<Rectangle> value = entry.getValue();
+			if (value != null && value.size() > 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	private static class ToastRequest {

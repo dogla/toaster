@@ -65,5 +65,11 @@ public class Toaster {
 		}
 		ToastManager.getInstance().toast(toolkit, toast);
 	}
-	
+
+	/**
+	 * @return <code>true</code> if no toasts are displayed or in the queue, <code>false</code> otherwise.
+	 */
+	public static synchronized boolean isEmpty() {
+		return ToastManager.getInstance().isEmpty();
+	}
 }
