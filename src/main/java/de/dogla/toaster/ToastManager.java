@@ -68,7 +68,7 @@ import de.dogla.toaster.ui.ToastToolkit;
 			Toast toast = toastRequest.getToast();
 			// previous toasts already pending > add the new toast directly to the queue
 			if (!isPendingToast && !pendingToasts.isEmpty()) {
-				logger.info("Other toasts already pending. Added toast to the queue: {}", toast);
+				logger.debug("Other toasts already pending. Added toast to the queue: {}", toast);
 				pendingToasts.add(toastRequest);
 				return;
 			}
@@ -87,15 +87,15 @@ import de.dogla.toaster.ui.ToastToolkit;
 				
 				// unregister pending toast
 				if (isPendingToast) {
-					logger.info("Unregistering pending toast: {}", toast);
+					logger.debug("Unregistering pending toast: {}", toast);
 					pendingToasts.remove(toastRequest);
 				}
 				
 				// show UI
-				logger.info("Showing toast: {}", toast);
+				logger.debug("Showing toast: {}", toast);
 				visiblePopups.add(toastPopup);
 				toastPopup.show(() -> {
-					logger.info("Toast closed: {}", toast);
+					logger.debug("Toast closed: {}", toast);
 					synchronized (visibleToasts) {
 						visiblePopups.remove(toastPopup);
 						Set<Rectangle> set = visibleToasts.get(toastPosition);
@@ -107,8 +107,8 @@ import de.dogla.toaster.ui.ToastToolkit;
 							if (!pendingToasts.isEmpty()) {
 								ToastRequest pendingToastRequest = pendingToasts.peek();
 								Toast pendingToast = pendingToastRequest.getToast();
-								logger.info("Pending toasts detected. Picking toast: {}", pendingToast);
-								logger.info("{} more pending tasks.", pendingToasts.size());
+								logger.debug("Pending toasts detected. Picking toast: {}", pendingToast);
+								logger.debug("{} more pending tasks.", pendingToasts.size());
 								
 								ToastPosition pendingToastPosition = pendingToast.getPosition();
 								ToastPopup pendingToastPopup = pendingToastRequest.getOrCreatePopup();
@@ -119,7 +119,7 @@ import de.dogla.toaster.ui.ToastToolkit;
 									toast(pendingToastRequest, true);
 								} else {
 									// no valid position found
-									logger.info("No free area found for Pending toast: {}", pendingToast);
+									logger.debug("No free area found for Pending toast: {}", pendingToast);
 								}
 							}
 						}
@@ -127,11 +127,11 @@ import de.dogla.toaster.ui.ToastToolkit;
 				});
 			} else if (!isPendingToast) {
 				// no free area available -> queue until some toasts were closed
-				logger.info("No free area found for the toast. Added toast to the queue: {}", toast);
+				logger.debug("No free area found for the toast. Added toast to the queue: {}", toast);
 				pendingToasts.add(toastRequest);
 			} else {
 				// no free area available for already pended toast > requeue at the start
-				logger.info("No free area found for already pending toast. Readded toast to the queue: {}", toast);
+				logger.debug("No free area found for already pending toast. Readded toast to the queue: {}", toast);
 				pendingToasts.addFirst(toastRequest);
 			}
 		}
