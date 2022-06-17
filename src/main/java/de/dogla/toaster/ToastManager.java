@@ -16,9 +16,11 @@
 package de.dogla.toaster;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -43,6 +45,7 @@ import de.dogla.toaster.ui.ToastToolkit;
 	private static Logger logger = LoggerFactory.getLogger(ToastManager.class);
 	
 	private Map<ToastPosition, Set<Rectangle>> visibleToasts = new HashMap<>();
+	private List<ToastPopup> visiblePopups = new ArrayList<>();
 	private Deque<ToastRequest> pendingToasts = new ArrayDeque<>(); 
 	
 	private static ToastManager INSTANCE = new ToastManager();
@@ -90,9 +93,11 @@ import de.dogla.toaster.ui.ToastToolkit;
 				
 				// show UI
 				logger.info("Showing toast: {}", toast);
+				visiblePopups.add(toastPopup);
 				toastPopup.show(() -> {
 					logger.info("Toast closed: {}", toast);
 					synchronized (visibleToasts) {
+						visiblePopups.remove(toastPopup);
 						Set<Rectangle> set = visibleToasts.get(toastPosition);
 						if (set != null) {
 							if (!set.remove(rectangle)) {
@@ -232,6 +237,12 @@ import de.dogla.toaster.ui.ToastToolkit;
 			}
 		}
 		return true;
+	}
+	
+	protected ToastPopup[] getVisiblePopups() {
+		synchronized (visibleToasts) {
+			return visiblePopups.toArray(new ToastPopup[visiblePopups.size()]);
+		}
 	}
 	
 	private static class ToastRequest {

@@ -15,6 +15,7 @@
  */
 package de.dogla.toaster;
 
+import de.dogla.toaster.ui.ToastPopup;
 import de.dogla.toaster.ui.ToastToolkit;
 import de.dogla.toaster.ui.impl.ToastToolkitImpl;
 
@@ -72,4 +73,12 @@ public class Toaster {
 	public static synchronized boolean isEmpty() {
 		return ToastManager.getInstance().isEmpty();
 	}
+	
+	/**
+	 * @return current visible popups.
+	 */
+	public static synchronized ToastPopup[] getVisiblePopups() {
+		return ToastManager.getInstance().getVisiblePopups();
+	}
+	
 }
