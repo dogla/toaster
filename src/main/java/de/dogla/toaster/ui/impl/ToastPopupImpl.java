@@ -84,40 +84,68 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 	 * @param toast the toast
 	 */
 	protected void createContent(Toast toast) {
-		setLayout(new GridLayout(2, false));
+		boolean highlightContainers = false;
+		setLayout(new GridLayout(1, false));
+		if (highlightContainers) {
+			setBackground(this.getDisplay().getSystemColor(SWT.COLOR_CYAN));
+		}
 
 		Color titleForeground = toSWTColor(toast.getTitleForegroundColor());
 		Color messageForeground = toSWTColor(toast.getMessageForegroundColor());
 		Color detailsForeground = toSWTColor(toast.getDetailsForegroundColor());
 		Color background = toSWTColor(toast.getBackgroundColor());
 		Color backgroundTop = toSWTColor(toast.getBackgroundColor());//ToasterUtils.brighter(ToasterUtils.brighter(toast.getBackgroundColor()));
-		
-		Composite iconContainer = new Composite(this, SWT.NONE);
-		iconContainer.setLayoutData(new GridData(SWT.BEGINNING, SWT.FILL, false, true));
-		iconContainer.setLayout(new GridLayout(1, false));
 
-		Image image = toImage(toast);
+		// close button settings
+		int closeButtonMargin = 5;
+		int closeButtonIconSize = 10;
+		int closeButtonContainerSize = closeButtonIconSize+2*closeButtonMargin;
 		
-		// image
-		Point canvasSize = new Point(0, 0);
-		double scale = 1;
+		Image image = toImage(toast);
 		if (image != null) {
+			setLayout(new GridLayout(2, false));
+			Composite iconContainer = new Composite(this, SWT.NONE);
+			iconContainer.setLayoutData(new GridData(SWT.BEGINNING, SWT.FILL, false, true));
+			iconContainer.setLayout(new GridLayout(1, false));
+			if (highlightContainers) {
+				iconContainer.setBackground(this.getDisplay().getSystemColor(SWT.COLOR_GREEN));
+			}
+			
+			// image
+			Point canvasSize = new Point(0, 0);
+			double scale = 1;
 			Rectangle origBounds = image.getBounds();
 			Point imageSize = new Point(origBounds.width, origBounds.height);
 			canvasSize.x = imageSize.x;
 			canvasSize.y = imageSize.y;
 			
+			int maxIconWidth = toast.getMaxIconWidth();
+			// adjust max icon width to fit into container/margins
+			if (maxIconWidth > toast.getMaxWidth() - 20) {
+				maxIconWidth = toast.getMaxWidth() - 20;
+			}
+			// adjust max icon width if we have to show the close button
+			int margins = closeButtonIconSize + 8*5;
+			if (isSticky() && maxIconWidth > toast.getMaxWidth() - margins) {
+				maxIconWidth = toast.getMaxWidth() - margins;
+			}
+			int minIconWidth = toast.getMinIconWidth();
+			// check min icon width
+			if (minIconWidth > maxIconWidth) {
+				minIconWidth = maxIconWidth;
+			}
+			
 			// check min width
-			if (toast.isAllowIconUpscaling() && imageSize.x < toast.getMinIconWidth()) {
+			if (toast.isAllowIconUpscaling() && imageSize.x < minIconWidth) {
 				// scale up
-				double aScale = toast.getMinIconWidth() * 1.0 / imageSize.x;
-				imageSize.x = toast.getMinIconWidth();
+				double aScale = minIconWidth * 1.0 / imageSize.x;
+				imageSize.x = minIconWidth;
 				imageSize.y *= aScale;
 				canvasSize.x = imageSize.x;
 				canvasSize.y = imageSize.y;
-				scale = toast.getMinIconWidth() * 1.0 / origBounds.width;
+				scale = minIconWidth * 1.0 / origBounds.width;
 			}
-
+			
 			// check min height
 			if (toast.isAllowIconUpscaling() && imageSize.y < toast.getMinIconHeight()) {
 				// scale up
@@ -128,18 +156,18 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 				canvasSize.y = imageSize.y;
 				scale = toast.getMinIconHeight() * 1.0 / origBounds.height;
 			}
-
+			
 			// check max width
-			if (toast.getMaxIconWidth() >= 0 && imageSize.x > toast.getMaxIconWidth()) {
+			if (maxIconWidth >= 0 && imageSize.x > maxIconWidth) {
 				// scale down
-				double aScale = toast.getMaxIconWidth() * 1.0 / imageSize.x;
-				imageSize.x = toast.getMaxIconWidth();
+				double aScale = maxIconWidth * 1.0 / imageSize.x;
+				imageSize.x = maxIconWidth;
 				imageSize.y *= aScale;
 				canvasSize.x = imageSize.x;
 				canvasSize.y = imageSize.y;
-				scale = toast.getMaxIconWidth() * 1.0 / origBounds.width;
+				scale = maxIconWidth * 1.0 / origBounds.width;
 			}
-
+			
 			// check max height
 			if (toast.getMaxIconHeight() >= 0 && imageSize.y > toast.getMaxIconHeight()) {
 				// scale down
@@ -151,34 +179,43 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 				scale = toast.getMaxIconHeight() * 1.0 / origBounds.height;
 			}
 			
-			if (canvasSize.x < toast.getMinIconWidth()) {
-				canvasSize.x = toast.getMinIconWidth();
+			if (canvasSize.x < minIconWidth) {
+				canvasSize.x = minIconWidth;
 			}
 			if (canvasSize.y < toast.getMinIconHeight()) {
 				canvasSize.y = toast.getMinIconHeight();
 			}
+			Canvas canvas = new Canvas(iconContainer, SWT.NONE) {
+				@Override
+				public Point computeSize(int wHint, int hHint, boolean changed) {
+					return canvasSize;
+				}
+			};
+			canvas.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, true));
+			if (highlightContainers) {
+				canvas.setBackground(this.getDisplay().getSystemColor(SWT.COLOR_RED));
+			}
+			double imageScale = scale;
+			canvas.addPaintListener(e -> {
+				e.gc.setAntialias(SWT.ON);
+				Color backgroundColor = toSWTColor(toast.getIconBackgroundColor());
+				e.gc.setBackground(backgroundColor);
+				e.gc.fillRectangle(0, 0, canvasSize.x, canvasSize.y);
+				if (!image.isDisposed()) {
+					drawCentered(e.gc, image, imageScale, canvasSize.x, canvasSize.y);
+				}
+			});
 		}
-		Canvas canvas = new Canvas(iconContainer, SWT.NONE) {
-			@Override
-			public Point computeSize(int wHint, int hHint, boolean changed) {
-				return canvasSize;
-			}
-		};
-		canvas.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, true));
-		double imageScale = scale;
-		canvas.addPaintListener(e -> {
-			e.gc.setAntialias(SWT.ON);
-			Color backgroundColor = toSWTColor(toast.getIconBackgroundColor());
-			e.gc.setBackground(backgroundColor);
-			e.gc.fillRectangle(0, 0, canvasSize.x, canvasSize.y);
-			if (image != null && !image.isDisposed()) {
-				drawCentered(e.gc, image, imageScale, canvasSize.x, canvasSize.y);
-			}
-		});
 		
 		Composite textContainer = new Composite(this, SWT.NONE);
 		textContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		textContainer.setLayout(new GridLayout(2, false));
+		GridLayout textContainerLayout = new GridLayout(2, false);
+		textContainerLayout.marginHeight = 0;
+		textContainerLayout.marginWidth = 0;
+		textContainer.setLayout(textContainerLayout);
+		if (highlightContainers) {
+			textContainer.setBackground(this.getDisplay().getSystemColor(SWT.COLOR_BLUE));
+		}
 		
 		boolean sticky = isSticky();
 		
@@ -190,19 +227,19 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 		lblTitle.setForeground(titleForeground);
 		FontDescriptor titleFontDescriptor = FontDescriptor.createFrom(getFont()).increaseHeight(2).setStyle(SWT.BOLD);
 		lblTitle.setFont(titleFontDescriptor.createFont(getDisplay()));
+		if (highlightContainers) {
+			lblTitle.setBackground(this.getDisplay().getSystemColor(SWT.COLOR_GREEN));
+		}
 		
 		if (sticky) {
-			int margin = 5;
-			int iconSize = 10;
-			int containerSize = iconSize+2*margin;
 			Canvas lblClose = new Canvas(textContainer, SWT.NONE) {
 				@Override
 				public Point computeSize(int wHint, int hHint, boolean changed) {
-					return new Point(containerSize, containerSize);
+					return new Point(closeButtonContainerSize, closeButtonContainerSize);
 				}
 			};
 			GridData layoutData = new GridData(SWT.END, SWT.BEGINNING, true, false);
-			layoutData.minimumWidth = containerSize;
+			layoutData.minimumWidth = closeButtonContainerSize;
 			lblClose.setLayoutData(layoutData);
 			boolean[] mouseIn = new boolean[1];
 			lblClose.addPaintListener(e -> {
@@ -210,10 +247,10 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 				if (mouseIn[0]) {
 					Color backgroundColor = toSWTColor(toast.getActionsBackgroundColor().brighter());
 					e.gc.setBackground(backgroundColor);
-					e.gc.fillRectangle(0, 0, containerSize, containerSize);
+					e.gc.fillRectangle(0, 0, closeButtonContainerSize, closeButtonContainerSize);
 				}
-	            e.gc.drawLine(margin, margin, margin+iconSize, margin+iconSize);
-	            e.gc.drawLine(margin, margin+iconSize, margin+iconSize, margin);
+	            e.gc.drawLine(closeButtonMargin, closeButtonMargin, closeButtonMargin+closeButtonIconSize, closeButtonMargin+closeButtonIconSize);
+	            e.gc.drawLine(closeButtonMargin, closeButtonMargin+closeButtonIconSize, closeButtonMargin+closeButtonIconSize, closeButtonMargin);
 			});
 			lblClose.addMouseTrackListener(new MouseTrackAdapter() {
 				@Override
@@ -229,6 +266,9 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 			});
 			lblClose.addMouseListener(MouseListener.mouseUpAdapter(e -> close()));
 			lblClose.setForeground(titleForeground);
+			if (highlightContainers) {
+				lblClose.setBackground(this.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
+			}
 		}
 		
 		Label lblMessage = new Label(textContainer, SWT.WRAP);
@@ -239,6 +279,9 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 		lblMessage.setForeground(messageForeground);
 		FontDescriptor messageFontDescriptor = FontDescriptor.createFrom(getFont()).increaseHeight(1);
 		lblMessage.setFont(messageFontDescriptor.createFont(getDisplay()));
+		if (highlightContainers) {
+			lblMessage.setBackground(this.getDisplay().getSystemColor(SWT.COLOR_GREEN));
+		}
 
 		String details = toast.getDetails();
 		if (details != null && !details.trim().isEmpty()) {
@@ -248,6 +291,9 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 			lblDetails.setForeground(detailsForeground);
 			FontDescriptor detailsFontDescriptor = FontDescriptor.createFrom(getFont()).increaseHeight(-1);
 			lblDetails.setFont(detailsFontDescriptor.createFont(getDisplay()));
+			if (highlightContainers) {
+				lblDetails.setBackground(this.getDisplay().getSystemColor(SWT.COLOR_GREEN));
+			}
 		}
 		
 		// if we are not sticky every click should close the toast
