@@ -18,6 +18,9 @@ package de.dogla.toaster;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.dogla.toaster.ui.ToastToolkit;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -29,6 +32,8 @@ import lombok.Singular;
  */
 @Builder(toBuilder = true) @Getter
 public class Toast {
+	
+	private static Logger logger = LoggerFactory.getLogger(Toast.class);
 	
 	@Default
 	private String id = UUID.randomUUID().toString();
@@ -116,7 +121,11 @@ public class Toast {
 	 * @see Toaster#toast(Toast)
 	 */
 	public void toast() {
-		Toaster.toast(this);
+		Thread t = new Thread(() -> {
+			Toaster.toast(this);
+		});
+		t.setUncaughtExceptionHandler((thread, e) -> logger.error("Uncaught exception detected: {}", e.getMessage(), e)); //$NON-NLS-1$
+		t.start();
 	}
 	
 	/**
@@ -125,7 +134,11 @@ public class Toast {
 	 * @param toolkit the toolkit
 	 */
 	public void toast(ToastToolkit toolkit) {
-		Toaster.toast(toolkit, this);
+		Thread t = new Thread(() -> {
+			Toaster.toast(toolkit, this);
+		});
+		t.setUncaughtExceptionHandler((thread, e) -> logger.error("Uncaught exception detected: {}", e.getMessage(), e)); //$NON-NLS-1$
+		t.start();
 	}
 
 	/* (non-javadoc)
