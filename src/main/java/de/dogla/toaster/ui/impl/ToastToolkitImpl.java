@@ -18,6 +18,8 @@ package de.dogla.toaster.ui.impl;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -35,6 +37,7 @@ public class ToastToolkitImpl implements ToastToolkit {
 
 	private Shell mainShell;
 	private ToastUIThread toastThread;
+	private Rectangle mainShellClientArea;
 	
 	/**
 	 * Constructor.
@@ -50,6 +53,19 @@ public class ToastToolkitImpl implements ToastToolkit {
 	 */
 	public ToastToolkitImpl(Shell mainShell) {
 		this.mainShell = mainShell;
+		if (this.mainShell != null) {
+			this.mainShell.addControlListener(new ControlListener() {
+				@Override
+				public void controlResized(ControlEvent e) {
+					mainShellClientArea = ToastToolkitImpl.this.mainShell.getMonitor().getClientArea();
+				}
+				@Override
+				public void controlMoved(ControlEvent e) {
+					mainShellClientArea = ToastToolkitImpl.this.mainShell.getMonitor().getClientArea();
+				}
+			});
+		}
+		this.mainShellClientArea = this.mainShell.getMonitor().getClientArea();
 		this.toastThread = new ToastUIThread();
 		this.toastThread.setDaemon(true);
 		this.toastThread.start();
@@ -69,9 +85,7 @@ public class ToastToolkitImpl implements ToastToolkit {
 	public Rectangle getPopupArea() {
 		Rectangle[] result = new Rectangle[1];
 		if (mainShell != null) {
-			mainShell.getDisplay().syncExec(() -> {
-				result[0] = mainShell.getMonitor().getClientArea();
-			});
+			result[0] = mainShellClientArea;
 		} else {
 			while (getPopupDisplay() == null) {
 				LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(100));
