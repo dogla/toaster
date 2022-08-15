@@ -64,8 +64,8 @@ public class ToastToolkitImpl implements ToastToolkit {
 					mainShellClientArea = ToastToolkitImpl.this.mainShell.getMonitor().getClientArea();
 				}
 			});
+			this.mainShellClientArea = this.mainShell.getMonitor().getClientArea();
 		}
-		this.mainShellClientArea = this.mainShell.getMonitor().getClientArea();
 		this.toastThread = new ToastUIThread();
 		this.toastThread.setDaemon(true);
 		this.toastThread.start();
