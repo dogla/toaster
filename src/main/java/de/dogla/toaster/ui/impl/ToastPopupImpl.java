@@ -491,7 +491,7 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 	
 	@Override
 	public void close() {
-		if (Display.getCurrent() == null) {
+		if (Display.getCurrent() == null || (Display.findDisplay(Thread.currentThread()) != getDisplay())) {
 			getDisplay().syncExec(super::close);
 		} else {
 			super.close();
