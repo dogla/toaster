@@ -108,8 +108,6 @@ public class Toast {
 	@Default
 	private int fadeOutSteps = 24;
 	
-	public static class ToastBuilder {}
-	
 	/**
 	 * @return the builder
 	 */
