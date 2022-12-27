@@ -12,8 +12,8 @@ They can be sticky, so the user have to close them manually, and they can have s
 Here is a sample showing the basic usage.
 
 ```java
-import de.dogla.toaster.Toast;
-import de.dogla.toaster.ToastAction;
+import io.github.dogla.toaster.Toast;
+import io.github.dogla.toaster.ToastAction;
 
 @SuppressWarnings({ "nls", "javadoc" })
 public class ToasterMain {

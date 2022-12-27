@@ -1,66 +1,102 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>de.dogla</groupId>
-  <artifactId>toaster</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <slf4jVersion>1.7.30</slf4jVersion>
-        <licensePluginVersion>3.0</licensePluginVersion>
-    </properties>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>io.github.dogla</groupId>
+	<artifactId>toaster</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	
+	<name>Toaster</name>
+	<description>Library for showing toast notifications in Java applications.</description>
+	<url>https://github.com/dogla/toaster</url>
+	
+	<developers>
+		<developer>
+			<name>Dominik Glaser</name>
+			<organization>dogla</organization>
+			<organizationUrl>https://github.com/dogla</organizationUrl>
+		</developer>
+	</developers>
+	
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	
+	<scm>
+		<connection>scm:git:git://github.com/dogla/toaster.git</connection>
+		<developerConnection>scm:git:git://github.com/dogla/toaster.git</developerConnection>
+		<url>http://github.com/dogla/toaster/tree/master</url>
+	</scm>
+	
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+	
+	<properties>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<slf4jVersion>1.7.32</slf4jVersion>
+		<licensePluginVersion>3.0</licensePluginVersion>
+	</properties>
 
-    <build>
-        <finalName>${groupId}.${artifactId}_${version}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>${licensePluginVersion}</version>
-                <configuration>
-                    <header>license-header.txt</header>
-                    <properties>
-                        <license.years>2020-2021</license.years>
-                    </properties>
-                    <includes>
-                        <include>src/*/java/**/*.java</include>
-                    </includes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>first</id>
-                        <goals>
-                            <goal>format</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <mainClass>de.dogla.toaster.ui.impl.ToasterDemo</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            
+	<build>
+		<finalName>${groupId}.${artifactId}_${version}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>${licensePluginVersion}</version>
+				<configuration>
+					<header>license-header.txt</header>
+					<properties>
+						<license.years>2020-2022</license.years>
+					</properties>
+					<includes>
+						<include>src/*/java/**/*.java</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>first</id>
+						<goals>
+							<goal>format</goal>
+						</goals>
+						<phase>process-sources</phase>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>io.github.dogla.toaster.ui.impl.ToasterDemo</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -69,78 +105,142 @@
 						<manifestFile>META-INF/MANIFEST.MF</manifestFile>
 					</archive>
 				</configuration>
-			</plugin>            
-        </plugins>
-        <pluginManagement>
-            <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>com.mycila</groupId>
-                                        <artifactId>license-maven-plugin</artifactId>
-                                        <versionRange>[3.0,)</versionRange>
-                                        <goals>
-                                            <goal>format</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+			</plugin>
+			
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-gpg-plugin</artifactId>
+			    <version>3.0.1</version>
+			    <executions>
+			        <execution>
+			            <id>sign-artifacts</id>
+			            <phase>verify</phase>
+			            <goals>
+			                <goal>sign</goal>
+			            </goals>
+						<configuration>
+							<gpgArguments>
+								<arg>--pinentry-mode</arg>
+								<arg>loopback</arg>
+							</gpgArguments>
+						</configuration>
+			        </execution>
+			    </executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<source>8</source>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.mycila</groupId>
+										<artifactId>license-maven-plugin</artifactId>
+										<versionRange>[3.0,)</versionRange>
+										<goals>
+											<goal>format</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4jVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.platform</groupId>
-            <artifactId>org.eclipse.jface</artifactId>
-            <version>3.23.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.platform</groupId>
-            <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
-            <version>3.117.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.platform</groupId>
-                    <artifactId>org.eclipse.swt</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
-        <!-- Lombok -->
-        
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- Test -->
-        
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.12</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>  
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4jVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.jface</artifactId>
+			<version>3.23.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+			<version>3.117.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>org.eclipse.swt</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Lombok -->
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.16</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Test -->
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.12</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020-2021 Dominik Glaser
+ * Copyright (C) 2020-2022 Dominik Glaser
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dogla.toaster.ui.impl;
+package io.github.dogla.toaster.ui.impl;
 
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -43,13 +43,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import de.dogla.toaster.Toast;
-import de.dogla.toaster.Toast.ToastBuilder;
-import de.dogla.toaster.ToastAction;
-import de.dogla.toaster.ToastColor;
-import de.dogla.toaster.ToastPosition;
-import de.dogla.toaster.Toaster;
-import de.dogla.toaster.ToasterUtils;
+import io.github.dogla.toaster.Toast;
+import io.github.dogla.toaster.ToastAction;
+import io.github.dogla.toaster.ToastColor;
+import io.github.dogla.toaster.ToastPosition;
+import io.github.dogla.toaster.Toaster;
+import io.github.dogla.toaster.ToasterUtils;
+import io.github.dogla.toaster.Toast.ToastBuilder;
 
 /**
  * A simple dialog that shows the possible settings for the toaster.

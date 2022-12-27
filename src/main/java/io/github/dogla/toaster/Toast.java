@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020-2021 Dominik Glaser
+ * Copyright (C) 2020-2022 Dominik Glaser
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dogla.toaster;
+package io.github.dogla.toaster;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +21,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.dogla.toaster.ui.ToastToolkit;
+import io.github.dogla.toaster.ui.ToastToolkit;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -107,6 +107,8 @@ public class Toast {
 	private int fadeInSteps = 8;
 	@Default
 	private int fadeOutSteps = 24;
+	
+	public static class ToastBuilder {}
 	
 	/**
 	 * @return the builder

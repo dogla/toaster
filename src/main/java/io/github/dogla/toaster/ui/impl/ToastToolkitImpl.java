@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020-2021 Dominik Glaser
+ * Copyright (C) 2020-2022 Dominik Glaser
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dogla.toaster.ui.impl;
+package io.github.dogla.toaster.ui.impl;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
@@ -24,9 +24,9 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import de.dogla.toaster.Toast;
-import de.dogla.toaster.ui.ToastPopup;
-import de.dogla.toaster.ui.ToastToolkit;
+import io.github.dogla.toaster.Toast;
+import io.github.dogla.toaster.ui.ToastPopup;
+import io.github.dogla.toaster.ui.ToastToolkit;
 
 /**
  * The default toolkit implementation.

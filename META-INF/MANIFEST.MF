@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Toaster Plugin
-Bundle-SymbolicName: de.dogla.toaster
+Bundle-SymbolicName: io.github.dogla.toaster
 Bundle-Version: 1.0.0.qualifier
-Export-Package: de.dogla.toaster,
- de.dogla.toaster.ui,
- de.dogla.toaster.ui.impl
+Export-Package: io.github.dogla.toaster,
+ io.github.dogla.toaster.ui,
+ io.github.dogla.toaster.ui.impl
 Require-Bundle: org.eclipse.ui
 Import-Package: org.slf4j

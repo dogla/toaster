@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020-2021 Dominik Glaser
+ * Copyright (C) 2020-2022 Dominik Glaser
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dogla.toaster.ui.impl;
+package io.github.dogla.toaster.ui.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +42,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.dogla.toaster.Toast;
-import de.dogla.toaster.ToastAction;
-import de.dogla.toaster.ToastColor;
-import de.dogla.toaster.ToasterUtils;
-import de.dogla.toaster.ui.ToastPopup;
-import de.dogla.toaster.ui.ToastPopupClosedCallback;
+import io.github.dogla.toaster.Toast;
+import io.github.dogla.toaster.ToastAction;
+import io.github.dogla.toaster.ToastColor;
+import io.github.dogla.toaster.ToasterUtils;
+import io.github.dogla.toaster.ui.ToastPopup;
+import io.github.dogla.toaster.ui.ToastPopupClosedCallback;
 
 /**
  * The default implementation of the {@link ToastPopup}.
