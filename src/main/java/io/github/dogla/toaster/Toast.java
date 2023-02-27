@@ -188,6 +188,18 @@ public class Toast {
 	}
 	
 	/**
+	 * Updates the displayTime of the toast.
+	 * The toast UI should recognize those changes and update the corresponding UI accordingly (@see {@link #addPropertyChangeListener(PropertyChangeListener)}).
+	 * 
+	 * @param displayTime the displayTime
+	 */
+	public void updateDisplayTime(int displayTime) {
+		int oldValue = this.displayTime;
+        this.displayTime = displayTime;
+        this.pcs.firePropertyChange("displayTime", oldValue, displayTime); //$NON-NLS-1$
+	}	
+	
+	/**
 	 * Shows the toast with the default toolkit.
 	 * 
 	 * @return the instance itself

@@ -285,7 +285,8 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 						updateMessage();
 					} else if ("details".equals(propertyName)) { //$NON-NLS-1$
 						updateDetails();
-					} else if ("icon".equals(propertyName)) { //$NON-NLS-1$
+					} else if ("icon".equals(propertyName) //$NON-NLS-1$
+							|| "displayTime".equals(propertyName)) { //$NON-NLS-1$
 						Image image = toImage(toast);
 						if (image != null) {
 							updateIcon(image);
