@@ -44,12 +44,12 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import io.github.dogla.toaster.Toast;
+import io.github.dogla.toaster.Toast.ToastBuilder;
 import io.github.dogla.toaster.ToastAction;
 import io.github.dogla.toaster.ToastColor;
 import io.github.dogla.toaster.ToastPosition;
 import io.github.dogla.toaster.Toaster;
 import io.github.dogla.toaster.ToasterUtils;
-import io.github.dogla.toaster.Toast.ToastBuilder;
 
 /**
  * A simple dialog that shows the possible settings for the toaster.
@@ -293,7 +293,7 @@ public class ToasterDemo extends Shell {
 		createLabel(parent, "Details");
 		createLabel(parent, "Image");
 		createText(parent, "Lorem ipsum title", toastBuilder::title);
-		createText(parent, "Lorem ipsum message. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et", toastBuilder::message);
+		createText(parent, "Lorem ipsum message. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero ", toastBuilder::message);
 		createText(parent, "Lorem ipsum details", toastBuilder::details);
 		createText(parent, IMG_TOASTER, toastBuilder::icon);
 	}
@@ -427,7 +427,13 @@ public class ToasterDemo extends Shell {
 	}
 	
 	private void toast(SelectionEvent event) {
-		toastBuilder.build().toast();
+		Toast toast = toastBuilder.build().toast();
+		getDisplay().timerExec(5000, () -> {
+			toast.updateTitle(toast.getTitle() + " [update]");
+			toast.updateMessage(toast.getMessage() + " [update]");
+			toast.updateDetails(toast.getDetails() + " [update]");
+			toast.updateIcon(IMG_DEMO);
+		});
 	}
 	
 	private void showTestMessages(SelectionEvent event) {

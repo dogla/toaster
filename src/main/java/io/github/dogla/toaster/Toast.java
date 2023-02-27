@@ -15,6 +15,8 @@
  */
 package io.github.dogla.toaster;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.dogla.toaster.ui.ToastToolkit;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -34,6 +37,9 @@ import lombok.Singular;
 public class Toast {
 	
 	private static Logger logger = LoggerFactory.getLogger(Toast.class);
+	
+	@Getter(AccessLevel.NONE)
+	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	
 	@Default
 	private String id = UUID.randomUUID().toString();
@@ -115,30 +121,102 @@ public class Toast {
 		return toBuilder().id(UUID.randomUUID().toString());
 	}
 	
+    /**
+     * Registers a property change listener to detect changes after the toast was initialized.
+     * 
+     * @param listener the property changed listener
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.addPropertyChangeListener(listener);
+    }
+
+    /**
+     * Removes a property change listener.
+     * 
+     * @param listener the property changed listener
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.removePropertyChangeListener(listener);
+    }
+	
+	/**
+	 * Updates the title of the toast.
+	 * The toast UI should recognize those changes and update the corresponding UI accordingly (@see {@link #addPropertyChangeListener(PropertyChangeListener)}).
+	 * 
+	 * @param title the title
+	 */
+	public void updateTitle(String title) {
+		String oldValue = this.title;
+        this.title = title;
+        this.pcs.firePropertyChange("title", oldValue, title); //$NON-NLS-1$
+	}
+
+	/**
+	 * Updates the message of the toast.
+	 * The toast UI should recognize those changes and update the corresponding UI accordingly (@see {@link #addPropertyChangeListener(PropertyChangeListener)}).
+	 * 
+	 * @param message the message
+	 */
+	public void updateMessage(String message) {
+		String oldValue = this.message;
+        this.message = message;
+        this.pcs.firePropertyChange("message", oldValue, message); //$NON-NLS-1$
+	}
+
+	/**
+	 * Updates the details of the toast.
+	 * The toast UI should recognize those changes and update the corresponding UI accordingly (@see {@link #addPropertyChangeListener(PropertyChangeListener)}).
+	 * 
+	 * @param details the details
+	 */
+	public void updateDetails(String details) {
+		String oldValue = this.details;
+        this.details = details;
+        this.pcs.firePropertyChange("details", oldValue, details); //$NON-NLS-1$
+	}
+
+	/**
+	 * Updates the icon of the toast.
+	 * The toast UI should recognize those changes and update the corresponding UI accordingly (@see {@link #addPropertyChangeListener(PropertyChangeListener)}).
+	 * 
+	 * @param icon the icon
+	 */
+	public void updateIcon(Object icon) {
+		Object oldValue = this.icon;
+        this.icon = icon;
+        this.pcs.firePropertyChange("icon", oldValue, icon); //$NON-NLS-1$
+	}
+	
 	/**
 	 * Shows the toast with the default toolkit.
 	 * 
+	 * @return the instance itself
+	 * 
 	 * @see Toaster#toast(Toast)
 	 */
-	public void toast() {
+	public Toast toast() {
 		Thread t = new Thread(() -> {
 			Toaster.toast(this);
 		});
 		t.setUncaughtExceptionHandler((thread, e) -> logger.error("Uncaught exception detected: {}", e.getMessage(), e)); //$NON-NLS-1$
 		t.start();
+		return this;
 	}
 	
 	/**
 	 * Shows the toast with the given toolkit.
 	 * 
+	 * @return the instance itself
+	 * 
 	 * @param toolkit the toolkit
 	 */
-	public void toast(ToastToolkit toolkit) {
+	public Toast toast(ToastToolkit toolkit) {
 		Thread t = new Thread(() -> {
 			Toaster.toast(toolkit, this);
 		});
 		t.setUncaughtExceptionHandler((thread, e) -> logger.error("Uncaught exception detected: {}", e.getMessage(), e)); //$NON-NLS-1$
 		t.start();
+		return this;
 	}
 
 	/* (non-javadoc)
