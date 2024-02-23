@@ -462,7 +462,7 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 			return imageDescriptor.createImage();
 		}
 		if (value != null) {
-			Image image = ToasterUtils.toImage(value);
+			Image image = ToasterUtils.toImage(getDisplay(), value);
 			if (image != null) {
 				imagesToDispose.add(image);
 				return image; 

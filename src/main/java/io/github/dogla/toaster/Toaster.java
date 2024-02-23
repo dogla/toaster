@@ -40,16 +40,23 @@ public class Toaster {
 	}
 	
 	/**
+	 * @return the default toolkit
+	 */
+	public static ToastToolkit getDefaultToolkit() {
+		if (DEFAULT_TOOLKIT == null) {
+			DEFAULT_TOOLKIT = new ToastToolkitImpl();
+		}
+		return DEFAULT_TOOLKIT;
+	}
+	
+	/**
 	 * Shows the toast with the default toolkit.
 	 * If no default toolkit was specified {@link IllegalStateException} will be thrown.
 	 * 
 	 * @param toast the toast
 	 */
 	public static synchronized void toast(Toast toast) {
-		if (DEFAULT_TOOLKIT == null) {
-			DEFAULT_TOOLKIT = new ToastToolkitImpl();
-		}
-		toast(DEFAULT_TOOLKIT, toast);
+		toast(getDefaultToolkit(), toast);
 	}
 	
 	/**

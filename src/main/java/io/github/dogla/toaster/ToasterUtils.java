@@ -16,11 +16,13 @@
 package io.github.dogla.toaster;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Base64;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,17 +51,26 @@ public class ToasterUtils {
 	}
 
 	/**
+	 * @param display the display
 	 * @param value the value
 	 * 
 	 * @return the corresponding {@link Image}
 	 */
-	public static Image toImage(Object value) {
+	public static Image toImage(Display display, Object value) {
 		if (value instanceof Image) {
 			return (Image)value;
 		}
 		if (value instanceof ImageDescriptor) {
 			ImageDescriptor imageDescriptor = (ImageDescriptor)value;
 			return imageDescriptor.createImage();
+		}
+		if (value instanceof byte[]) {
+			byte[] bytes = (byte[])value;
+			return new Image(null, new ByteArrayInputStream(bytes));
+		}
+		if (value instanceof InputStream) {
+			InputStream in = (InputStream)value;
+			return new Image(null, in);
 		}
 		if (value instanceof String) {
 			String sValue = (String)value;
@@ -71,6 +82,13 @@ public class ToasterUtils {
 				} catch (SWTException e) {
 					logger.error(e.getMessage(), e);
 				}
+			}
+		}
+		// ask registered icon factories
+		ToastIconFactory[] factories = ToastIconFactory.getToastIconFactories();
+		for (ToastIconFactory factory : factories) {
+			if (factory.canHandle(value)) {
+				return factory.toImage(value);
 			}
 		}
 		if (value != null) {
