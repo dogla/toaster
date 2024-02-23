@@ -58,7 +58,7 @@
 				<configuration>
 					<header>license-header.txt</header>
 					<properties>
-						<license.years>2020-2022</license.years>
+						<license.years>2020-2024</license.years>
 					</properties>
 					<includes>
 						<include>src/*/java/**/*.java</include>
