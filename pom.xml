@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.dogla</groupId>
 	<artifactId>toaster</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	
 	<name>Toaster</name>
 	<description>Library for showing toast notifications in Java applications.</description>
