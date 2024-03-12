@@ -234,7 +234,9 @@ public class ToastPopupImpl extends Shell implements ToastPopup {
 				}
 			});
 			lblAction.addMouseListener(MouseListener.mouseUpAdapter(e -> {
-				close();
+				if (action.isCloseToastOnExecute()) {
+					close();
+				}
 				Consumer<Toast> executable = action.getExecutable();
 				if (executable != null) {
 					Thread thread = new Thread(() -> executable.accept(toast));

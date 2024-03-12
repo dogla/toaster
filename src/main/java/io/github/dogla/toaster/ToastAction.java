@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 import org.eclipse.swt.graphics.Image;
 
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 
 /**
@@ -36,6 +37,8 @@ public class ToastAction {
 	private ToastColor foregroundColor;
 	private ToastColor backgroundColorHovered;
 	private ToastColor foregroundColorHovered;
+	@Default
+	private boolean closeToastOnExecute = true;
 	
 	/**
 	 * @param defaultColor
